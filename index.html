@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DoD & CMMC-Relevant Events Calendar</title>
+  <meta name="description" content="A curated, date-ordered card view of defense, GovCon, cyber, and CMMC-relevant events." />
+  <style>
+    :root {
+      --bg: #f7f2e8;
+      --paper: #fffaf1;
+      --ink: #191713;
+      --muted: #6d6457;
+      --line: #ded2bf;
+      --accent: #d97742;
+      --accent-dark: #9d4f25;
+      --sage: #d8dfcf;
+      --sand: #ece1ce;
+      --shadow: 0 18px 50px rgba(45, 34, 20, 0.10);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 3%, rgba(217, 119, 66, 0.16), transparent 30rem),
+        radial-gradient(circle at 92% 14%, rgba(139, 157, 122, 0.22), transparent 28rem),
+        linear-gradient(180deg, #f9f4eb 0%, var(--bg) 44%, #efe4d3 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    a { color: inherit; }
+
+    .wrap {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 72px 0 42px;
+      border-bottom: 1px solid rgba(25, 23, 19, 0.10);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 250, 241, 0.72);
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: .02em;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(217, 119, 66, .14);
+    }
+
+    h1 {
+      max-width: 900px;
+      margin: 28px 0 18px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 500;
+      letter-spacing: -0.055em;
+      line-height: .96;
+      font-size: clamp(46px, 8vw, 92px);
+    }
+
+    .lede {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: clamp(18px, 2.2vw, 22px);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 30px 0 0;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 241, .72);
+      border-radius: 999px;
+      padding: 10px 14px;
+      color: #51493f;
+      font-size: 14px;
+    }
+
+    main { padding: 42px 0 74px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      border: 1px solid rgba(25, 23, 19, .12);
+      border-radius: var(--radius);
+      background: rgba(255, 250, 241, .82);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 7px;
+      background: linear-gradient(90deg, var(--accent), #e3b673, var(--sage));
+    }
+
+    .card-body { padding: 26px; }
+
+    .topline {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+
+    .logo img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+    }
+
+    .logo span {
+      color: var(--accent-dark);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .date {
+      color: var(--accent-dark);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 4px 0 6px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 30px;
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+      font-weight: 500;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    ul {
+      margin: 18px 0 0;
+      padding-left: 20px;
+      color: #352f28;
+    }
+
+    li { margin: 7px 0; }
+
+    .rating {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(236, 225, 206, .62);
+      border: 1px solid rgba(25, 23, 19, .08);
+    }
+
+    .stars {
+      color: #b85f2d;
+      letter-spacing: .08em;
+      white-space: nowrap;
+      font-size: 18px;
+    }
+
+    .rating small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: auto;
+      padding: 0 26px 26px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 10px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #1f1b16;
+      color: #fffaf1;
+      text-decoration: none;
+      font-size: 14px;
+      transition: transform .16s ease, background .16s ease;
+    }
+
+    .btn.secondary {
+      background: rgba(255, 250, 241, .85);
+      color: var(--ink);
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .note {
+      margin-top: 26px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: rgba(255, 250, 241, .66);
+      color: var(--muted);
+      border: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    footer {
+      padding: 28px 0 46px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 820px) {
+      header { padding-top: 46px; }
+      .grid { grid-template-columns: 1fr; }
+      .card-body { padding: 22px; }
+      .links { padding: 0 22px 22px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow"><span class="dot"></span> 2026 defense, GovCon & CMMC-relevant event map</div>
+      <h1>Where DoD-facing companies gather.</h1>
+      <p class="lede">A date-ordered shortlist of conferences where you’re likely to meet defense contractors, primes, cybersecurity vendors, and companies dealing with CUI, NIST 800-171, and CMMC pressure.</p>
+      <div class="controls" aria-label="Legend">
+        <span class="pill">★★★★★ = strongest CMMC/DIB density</span>
+        <span class="pill">Ordered by 2026 event timing</span>
+        <span class="pill">Dates should be verified before booking</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="grid" aria-label="Event cards">
+
+      <article class="card">
+        <div class="card-body">
+          <div class="topline">
+            <div>
+              <div class="date">Feb 10–12, 2026 · San Diego, CA</div>
+              <h2>AFCEA / USNI WEST</h2>
+              <div class="meta">Navy, Marine Corps, Coast Guard, C4ISR, cyber, comms, and mission IT.</div>
+            </div>
+            <div class="logo"><img alt="AFCEA favicon" src="https://www.google.com/s2/favicons?domain=afcea.org&sz=64"></div>
+          </div>
+          <ul>
+            <li>One of the biggest serious-buyer events in the Navy / maritime defense ecosystem.</li>
+            <li>Strong attendance from primes, federal IT, cyber, communications, and platform vendors.</li>
+            <li>Useful for BD, partner mapping, and understanding program priorities.</li>
+          </ul>
+          <div class="rating"><small>CMMC-relevant company density</small><div class="stars" aria-label="4 out of 5 stars">★★★★☆</div></div>
+        </div>
+        <div class="links"><a class="btn" href="https://www.afcea.org/events" target="_blank" rel="noreferrer">AFCEA events</a><a class="btn secondary" href="https://www.usni.org/events" target="_blank" rel="noreferrer">USNI events</a></div>
+      </article>
+
+      <article class="card">
+        <div class="card-body">
+          <div class="topline">
+            <div>
+              <div class="date">Feb 11–13, 2026 · Orlando, FL</div>
+              <h2>CUI-CON</h2>
+              <div class="meta">Controlled Unclassified Information, NIST 800-171, CMMC, and DIB security.</div>
+            </div>
+            <div class="logo"><img alt="CUI-CON favicon" src="https://www.google.com/s2/favicons?domain=cui-con.com&sz=64"></div>
+          </div>
+          <ul>
+            <li>The most directly relevant event on this list for CUI and CMMC implementation.</li>
+            <li>Good fit for DoD contractors, MSPs/MSSPs, consultants, assessors, and compliance buyers.</li>
+            <li>More practical compliance signal than broad defense expos.</li>
+          </ul>
+          <div class="rating"><small>CMMC-relevant company density</small><div class="stars" aria-label="5 out of 5 stars">★★★★★</div></div>
+        </div>
+        <div class="links"><a class="btn" href="https://cui-con.com/" target="_blank" rel="noreferrer">Official site</a><a class="btn secondary" href="https://cui-con.com/about/past-events/cui-con-2026/agenda-2026/" target="_blank" rel="noreferrer">Agenda</a></div>
+      </article>
+
+      <article class="card">
+        <div class="card-body">
+          <div class="topline">
+            <div>
+              <div class="date">Mar 24–26, 2026 · Huntsville, AL</div>
+              <h2>AUSA Global Force</h2>
+              <div class="meta">Army modernization, acquisition, industry, and land-domain defense tech.</div>
+            </div>
+            <div class="logo"><img alt="AUSA favicon" src="https://www.google.com/s2/favicons?domain=ausa.org&sz=64"></div>
+          </div>
+          <ul>
+            <li>Good Army-focused venue for modernization priorities and industry engagement.</li>
+            <li>Relevant for software, logistics, cyber, comms, autonomy, and land systems companies.</li>
+            <li>Huntsville concentration makes it unusually dense for defense contractors.</li>
+          </ul>
+          <div class="rating"><small>CMMC-relevant company density</small><div class="stars" aria-label="4 out of 5 stars">★★★★☆</div></div>
+        </div>
+        <div class="links"><a class="btn" href="https://meetings.ausa.org/globalforce/2026/index.cfm" target="_blank" rel="noreferrer">Official site</a><a class="btn secondary" href="https://www.ausa.org/events" target="_blank" rel="noreferrer">AUSA events</a></div>
+      </article>
+
+      <article class="card">
+        <div class="card-body">
+          <div class="topline">
+            <div>
+              <div class="date">Apr 6–8, 2026 · National Harbor, MD</div>
+              <h2>Sea-Air-Space</h2>
+              <div class="meta">Navy League’s global maritime exposition.</div>
+            </div>
+            <div class="logo"><img alt="Sea-Air-Space favicon" src="https://www.google.com/s2/favicons?domain=seaairspace.org&sz=64"></div>
+          </div>
+          <ul>
+            <li>Strong Navy, maritime, shipbuilding, aerospace, and defense-supplier attendance.</li>
+            <li>Good venue for meeting primes and subcontractors with CUI obligations.</li>
+            <li>Useful if your target market touches naval programs or maritime defense.</li>
+          </ul>
+          <div class="rating"><small>CMMC-relevant company density</small><div class="stars" aria-label="4 out of 5 stars">★★★★☆</div></div>
+        </div>
+        <div class="links"><a class="btn" href="https://seaairspace.org/" target="_blank" rel="noreferrer">Official site</a><a class="btn secondary" href="https://seaairspace.org/attend/" target="_blank" rel="noreferrer">Hotel & travel</a></div>
+      </article>
+
+      <article class="card">
+        <div class="card-body">
+          <div class="topline">
+            <div>
+              <div class="date">May 18–21, 2026 · Tampa, FL</div>
+              <h2>SOF Week</h2>
+              <div class="meta">Global Special Operations Forces community, operators, industry, and defense innovation.</div>
+            </div>
+            <div class="logo"><img alt="SOF Week favicon" src="https://www.google.com/s2/favicons?domain=sofweek.org&sz=64"></div>
+          </div>
+          <ul>
+            <li>Premier annual gathering for the global SOF community.</li>
+            <li>Good for startups, dual-use vendors, tactical systems, and operator-led discovery.</li>
+            <li>High density of DoD-facing vendors, primes, integrators, and mission tech companies.</li>
+          </ul>
+          <div class="rating"><small>CMMC-relevant company density</small><div class="stars" aria-label="4 out of 5 stars">★★★★☆</div></div>
+        </div>
+        <div class="links"><a class="btn" href="https://sofweek.org/" target="_blank" rel="noreferrer">Official site</a><a class="btn secondary" href="https://sofweek.org/2026-registration/" target="_blank" rel="noreferrer">Register</a></div>
+      </article>
+
+      <article class="card">
+        <div class="card-body">
+          <div class="topline">
+            <div>
+              <div class="date">Jun 2026 · Baltimore, MD</div>
+              <h2>AFCEA TechNet Cyber</h2>
+              <div class="meta">Federal cyber, zero trust, security operations, and cyber mission technology.</div>
+            </div>
+            <div class="logo"><img alt="AFCEA favicon" src="https://www.google.com/s2/favicons?domain=afcea.org&sz=64"></div>
+          </div>
+          <ul>
+            <li>Probably the best large-event overlap between cyber buyers and CMMC-adjacent vendors.</li>
+            <li>Relevant for MSSPs, GRC, zero trust, identity, monitoring, and secure infrastructure.</li>
+            <li>Strong place to meet DIB companies trying to operationalize security requirements.</li>
+          </ul>
+          <div class="rating"><small>CMMC-relevant company density</small><div class="stars" aria-label="5 out of 5 stars">★★★★★</div></div>
+        </div>
+        <div class="links"><a class="btn" href="https://www.afcea.org/events" target="_blank" rel="noreferrer">AFCEA events</a><a class="btn secondary" href="https://www.afcea.org/signal-media" target="_blank" rel="noreferrer">Signal Media</a></div>
+      </article>
+
+      <article class="card">
+        <div class="card-body">
+          <div class="topline">
+            <div>
+              <div class="date">Summer 2026 · U.S.</div>
+              <h2>NCMA World Congress</h2>
+              <div class="meta">Federal contracting, acquisition, procurement, and contract management.</div>
+            </div>
+            <div class="logo"><img alt="NCMA favicon" src="https://www.google.com/s2/favicons?domain=ncmahq.org&sz=64"></div>
+          </div>
+          <ul>
+            <li>Best for understanding how money, contracts, clauses, and procurement actually move.</li>
+            <li>Good place to meet GovCon operators, capture teams, contract managers, and compliance-minded vendors.</li>
+            <li>Less flashy than defense expos, but more process-rich.</li>
+          </ul>
+          <div class="rating"><small>CMMC-relevant company density</small><div class="stars" aria-label="3 out of 5 stars">★★★☆☆</div></div>
+        </div>
+        <div class="links"><a class="btn" href="https://www.ncmahq.org/events" target="_blank" rel="noreferrer">NCMA events</a><a class="btn secondary" href="https://www.ncmahq.org/" target="_blank" rel="noreferrer">NCMA</a></div>
+      </article>
+
+      <article class="card">
+        <div class="card-body">
+          <div class="topline">
+            <div>
+              <div class="date">Aug 11–13, 2026 · Huntsville, AL</div>
+              <h2>Space & Missile Defense Symposium</h2>
+              <div class="meta">Space, missile defense, high-end defense systems, and Huntsville aerospace ecosystem.</div>
+            </div>
+            <div class="logo"><img alt="SMD Symposium favicon" src="https://www.google.com/s2/favicons?domain=smdsymposium.org&sz=64"></div>
+          </div>
+          <ul>
+            <li>Leading networking event for the space and missile defense community.</li>
+            <li>Widely attended by U.S. and allied leaders, professionals, primes, and suppliers.</li>
+            <li>Very strong contractor density because of Huntsville and missile/space program concentration.</li>
+          </ul>
+          <div class="rating"><small>CMMC-relevant company density</small><div class="stars" aria-label="4 out of 5 stars">★★★★☆</div></div>
+        </div>
+        <div class="links"><a class="btn" href="https://smdsymposium.org/" target="_blank" rel="noreferrer">Official site</a><a class="btn secondary" href="https://smdsymposium.org/agenda/" target="_blank" rel="noreferrer">Agenda</a></div>
+      </article>
+
+      <article class="card">
+        <div class="card-body">
+          <div class="topline">
+            <div>
+              <div class="date">Aug 2026 · Augusta, GA</div>
+              <h2>AFCEA TechNet Augusta</h2>
+              <div class="meta">Army cyber, signal, networks, electronic warfare, and tactical communications.</div>
+            </div>
+            <div class="logo"><img alt="AFCEA favicon" src="https://www.google.com/s2/favicons?domain=afcea.org&sz=64"></div>
+          </div>
+          <ul>
+            <li>Strong Army cyber and signal audience.</li>
+            <li>Useful for cyber, networks, secure infrastructure, tactical comms, and EW companies.</li>
+            <li>High probability of meeting contractors already handling sensitive government data.</li>
+          </ul>
+          <div class="rating"><small>CMMC-relevant company density</small><div class="stars" aria-label="5 out of 5 stars">★★★★★</div></div>
+        </div>
+        <div class="links"><a class="btn" href="https://www.afcea.org/events" target="_blank" rel="noreferrer">AFCEA events</a><a class="btn secondary" href="https://www.afcea.org/afcea-chapters-around-world" target="_blank" rel="noreferrer">Chapters</a></div>
+      </article>
+
+      <article class="card">
+        <div class="card-body">
+          <div class="topline">
+            <div>
+              <div class="date">Sep 2026 · National Harbor, MD</div>
+              <h2>Air, Space & Cyber Conference</h2>
+              <div class="meta">Air Force, Space Force, cyber, aerospace, and national security technology.</div>
+            </div>
+            <div class="logo"><img alt="AFA favicon" src="https://www.google.com/s2/favicons?domain=afa.org&sz=64"></div>
+          </div>
+          <ul>
+            <li>Major Air Force / Space Force industry gathering.</li>
+            <li>Good for cyber, aerospace, software, space, and defense tech vendors.</li>
+            <li>Strong concentration of companies with DoD contract and CUI exposure.</li>
+          </ul>
+          <div class="rating"><small>CMMC-relevant company density</small><div class="stars" aria-label="4 out of 5 stars">★★★★☆</div></div>
+        </div>
+        <div class="links"><a class="btn" href="https://www.afa.org/air-space-cyber-conference/" target="_blank" rel="noreferrer">Official site</a><a class="btn secondary" href="https://www.afa.org/events/" target="_blank" rel="noreferrer">AFA events</a></div>
+      </article>
+
+      <article class="card">
+        <div class="card-body">
+          <div class="topline">
+            <div>
+              <div class="date">Oct 2026 · Washington, DC</div>
+              <h2>AUSA Annual Meeting</h2>
+              <div class="meta">Army’s largest annual industry gathering and exposition.</div>
+            </div>
+            <div class="logo"><img alt="AUSA favicon" src="https://www.google.com/s2/favicons?domain=ausa.org&sz=64"></div>
+          </div>
+          <ul>
+            <li>Huge Army-focused event with broad prime, supplier, and government attendance.</li>
+            <li>Best for market mapping, partner development, and seeing the full land-defense vendor ecosystem.</li>
+            <li>Very high density of firms that either need CMMC or sell into companies that do.</li>
+          </ul>
+          <div class="rating"><small>CMMC-relevant company density</small><div class="stars" aria-label="4 out of 5 stars">★★★★☆</div></div>
+        </div>
+        <div class="links"><a class="btn" href="https://meetings.ausa.org/annual/2026/index.cfm" target="_blank" rel="noreferrer">Official site</a><a class="btn secondary" href="https://www.ausa.org/events" target="_blank" rel="noreferrer">AUSA events</a></div>
+      </article>
+
+    </section>
+
+    <p class="note"><strong>Note:</strong> This is a planning page, not a booking authority. Some 2026 event pages publish exact dates later or move URLs year-to-year, so verify dates and venue before buying travel. Ratings are qualitative: likelihood of encountering companies with CMMC/CUI pressure, not a statement that the event itself requires CMMC.</p>
+  </main>
+
+  <footer class="wrap">
+    Built as a compact scouting page for DoD-facing and CMMC-relevant business development.
+  </footer>
+</body>
+</html>
